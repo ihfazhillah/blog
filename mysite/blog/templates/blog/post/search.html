@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+
+{% block site_title %}Search result of {{ data.q }}{% endblock %}
+
+{% block main_content %}
+
+{% if 'q' in request.GET %}
+  <h1 class="my-4">Posts containing {{ data.q }}</h1>
+  <h3>Found {{ total }} result{{ total|pluralize }}</h3>
+  {% for post in results %}
+      <!-- Blog Post -->
+      <div class="card mb-4">
+        {% with post.tags.all as tags %}
+            {% if tags %}
+            <div class="card-header">Tags: 
+              {% for tag in tags %}
+                <a href="{% url 'blog:post-list-by-tag' tag.slug %}">{{ tag }}</a>
+                {% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+        <div class="card-body">
+          <h2 class="card-title">{{ post.object.title }}</h2>
+          <p class="card-text"> {{ post.highlighted.text.0 | safe }}</p>
+          <a href="{{ post.object.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
+        </div>
+        <div class="card-footer text-muted">
+          Posted on {{ post.publish }} by
+          <a href="#">{{ post.object.author.username }}</a>
+        </div>
+      </div>
+
+      {% empty %}
+      <p>There are no results for your query.</p>
+
+
+  {% endfor %}
+{% else %}
+<h1 class="my-4">Search for Posts</h1>
+{% include 'search/snippets/search_form.html' %}
+{% endif %}
+
+
+
+
+        
+{% endblock %}

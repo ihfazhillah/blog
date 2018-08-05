@@ -1,0 +1,11 @@
+certifi==2018.4.16
+chardet==3.0.4
+Django==1.8
+django-haystack==2.4.0
+django-taggit==0.22.2
+idna==2.7
+Markdown==2.6.11
+pysolr==3.7.0
+pytz==2018.5
+requests==2.19.1
+urllib3==1.23

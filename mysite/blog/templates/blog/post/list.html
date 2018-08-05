@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+
+{% block site_title %}{% if tag %}{{ tag }}{% else %}Blog Posts{% endif %}{% endblock %}
+
+{% block main_content %}
+
+{% if tag %}
+<h1 class="my-4">Posts with tag '{{ tag }}'</h1>
+{% else %}
+<h1 class="my-4">Blog Posts </h1>
+{% endif %}
+
+{% if posts %}
+
+{% for post in posts %}
+    <!-- Blog Post -->
+    <div class="card mb-4">
+      {% with post.tags.all as tags %}
+          {% if tags %}
+          <div class="card-header">Tags: 
+            {% for tag in tags %}
+              <a href="{% url 'blog:post-list-by-tag' tag.slug %}">{{ tag }}</a>
+              {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+      <div class="card-body">
+        <h2 class="card-title">{{ post.title }}</h2>
+        <p class="card-text"> {{ post.body | markdown | truncatewords_html:20 }}</p>
+        <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
+      </div>
+      <div class="card-footer text-muted">
+        Posted on {{ post.publish }} by
+        <a href="#">{{ post.author.username }}</a>
+      </div>
+    </div>
+
+{% endfor %}
+
+{% include 'pagination.html' with page=posts %}
+
+{% else %}
+<p>No post found.</p>
+{% endif %}
+
+        
+{% endblock %}

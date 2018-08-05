@@ -1,0 +1,77 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+
+{% block site_title %}{{ post.title | title }}{% endblock %}
+
+{% block main_content %}
+
+
+
+<h1 class="my-4">{{ post.title | title }}
+  <small class="text-muted">Posted on {{ post.publish }} by {{ post.author.username }}</small>
+</h1>
+
+
+    <!-- Blog Post -->
+    <div class="card mb-4">
+      {% with post.tags.all as tags %}
+          {% if tags %}
+          <div class="card-header">Tags: 
+            {% for tag in tags %}
+              <a href="{% url 'blog:post-list-by-tag' tag.slug %}">{{ tag }}</a>
+              {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text"> {{ post.body | markdown | linebreaks }}</p>
+      </div>
+      <div class="card-footer text-muted">
+        <a class="card-link" href="{% url 'blog:share-email' post.id %}">share by email</a>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header">Similiar Posts</div>
+      <div class="card-body">
+        {% for similiar in similiar_posts %}
+          <p><a href="{{ similiar.get_absolute_url }}">{{ similiar.title | title }}</a></p>
+        {% empty %}
+          <p>There are no similiar posts.</p>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      {% with comments.count as total_count %}
+        <div class="card-header">{{ total_count }} comment{{ total_count|pluralize }}</div>
+      {% endwith %}
+
+      {% for comment in comments %}
+
+					<div class="media m-4">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+              <h5 class="mt-0">{{ comment.name }}</h5>
+              {{ comment.body | linebreaks }} 
+            </div>
+          </div>
+
+      {% endfor %}
+
+      <div class="card-body">
+        <form action="{{ post.get_absolute_url }}" method="post">
+          {% csrf_token %}
+          {{ form }}
+
+          <input class="btn btn-success" type="submit" value="Submit">
+        </form>
+      </div>
+    </div>
+
+
+        
+{% endblock %}

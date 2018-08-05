@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %}
+
+{% block site_title %}Share {{ post.title | title }}{% endblock %}
+
+{% block main_content %}
+
+
+
+<h1 class="my-4">Share {{ post.title | title }}</h1>
+
+
+    <!-- Blog Post -->
+    <div class="card mb-4">
+      <div class="card-body">
+
+        {% if sent %}
+          <p>Your email sent successfully to {{ form_data.to }}</p>
+        {% else %}
+          <form action="{% url 'blog:share-email' post.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+
+            <input class="btn btn-success" type="submit" value="submit">
+            
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+
+        
+{% endblock %}
