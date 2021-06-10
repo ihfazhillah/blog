@@ -1,6 +1,6 @@
 certifi==2018.4.16
 chardet==3.0.4
-Django==1.8
+Django==2.2.24
 django-haystack==2.4.0
 django-taggit==0.22.2
 idna==2.7
